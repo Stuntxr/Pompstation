@@ -28,10 +28,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.text.DecimalFormat;
-import jxl.Workbook; 
-import jxl.write.*; 
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
-public class Gui {
+public class Gui extends JFrame {
 
 	private JFrame frame;
 	private JTextField p1Liters, p2Liters, p3Liters, p4Liters, p5Liters, p6Liters, p7Liters, p8Liters ;
@@ -48,8 +52,14 @@ public class Gui {
 	private JTextArea textArea;
 	private JComboBox<Object> p1ComboBox, p2ComboBox, p3ComboBox, p4ComboBox, p5ComboBox, p6ComboBox, p7ComboBox, p8ComboBox;
 	private JButton p1PaidBtn;
+	private double Diesel, Unleaded, SuperUnleaded;
 	
 	DecimalFormat df = new DecimalFormat("#0.00");
+	private JMenuBar menuBar;
+	private JMenu mnFile;
+	private JMenuItem mntmChangeOilPrice;
+	private JMenuItem mntmExit;
+	private JMenuItem mntmShowOilPrice;
 
 	/**
 	 * Launch the application.
@@ -66,41 +76,6 @@ public class Gui {
 			}
 		});
 		
-		//Declare workbook
-		WritableWorkbook workbook;
-		
-		try {
-			workbook = Workbook.createWorkbook(new File("C:\\Users\\User\\Desktop\\testXL.xls"));//Create excel file 			
-			WritableSheet wsheet = workbook.createSheet("First Sheet", 0);
-				 Label label = new Label(0, 2, "A label record");
-				  wsheet.addCell(label);
-		          int colom=0; //Excelsheet colom 0
-		          int row=0; //Excelsheet row 1
-
-		           colom=0;
-					 label = new Label(colom++, row, "ID");
-					  wsheet.addCell(label);
-					 label = new Label(colom++, row, "Kentekennummer");
-					  wsheet.addCell(label);
-					  label = new Label(colom++, row, "Betaald Bedrag");
-					  wsheet.addCell(label);
-					  label = new Label(colom++, row, "Aantal liters getankt");
-					  wsheet.addCell(label);
-					 row++;
-			 
-					 colom=0;
-					 label = new Label(colom++, row, "1");
-					  wsheet.addCell(label);
-					 label = new Label(colom++, row, p1KenNum.getText());
-					  wsheet.addCell(label);
-					
-            
-            workbook.write();
-            workbook.close();
-          
-            } catch (Exception e) {
-            //System.out.println(e);
-			}
 	
 	}
 
@@ -120,7 +95,7 @@ public class Gui {
 		frame.setBounds(100, 100, 866, 470);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 50, 50, 0, 100, 0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 0, 70, 75, 75, 0, 110, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -154,21 +129,21 @@ public class Gui {
 		gbc_lblAmount.gridy = 1;
 		frame.getContentPane().add(lblAmount, gbc_lblAmount);
 		
-		JLabel lblSelectOilType = new JLabel("Select Oil Type");
-		lblSelectOilType.setForeground(Color.LIGHT_GRAY);
-		GridBagConstraints gbc_lblSelectOilType = new GridBagConstraints();
-		gbc_lblSelectOilType.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSelectOilType.gridx = 5;
-		gbc_lblSelectOilType.gridy = 1;
-		frame.getContentPane().add(lblSelectOilType, gbc_lblSelectOilType);
+		JLabel lblSelectoiltype = new JLabel("Select Oil Type");
+		lblSelectoiltype.setForeground(Color.LIGHT_GRAY);
+		GridBagConstraints gbc_lblSelectoiltype = new GridBagConstraints();
+		gbc_lblSelectoiltype.insets = new Insets(0, 0, 5, 5);
+		gbc_lblSelectoiltype.gridx = 5;
+		gbc_lblSelectoiltype.gridy = 1;
+		frame.getContentPane().add(lblSelectoiltype, gbc_lblSelectoiltype);
 		
-		JLabel lblKentekennummer = new JLabel("Kentekennummer");
-		lblKentekennummer.setForeground(Color.LIGHT_GRAY);
-		GridBagConstraints gbc_lblKentekennummer = new GridBagConstraints();
-		gbc_lblKentekennummer.insets = new Insets(0, 0, 5, 5);
-		gbc_lblKentekennummer.gridx = 6;
-		gbc_lblKentekennummer.gridy = 1;
-		frame.getContentPane().add(lblKentekennummer, gbc_lblKentekennummer);
+		JLabel lbllicensePlate = new JLabel("licensePlate");
+		lbllicensePlate.setForeground(Color.LIGHT_GRAY);
+		GridBagConstraints gbc_lbllicensePlate = new GridBagConstraints();
+		gbc_lbllicensePlate.insets = new Insets(0, 0, 5, 5);
+		gbc_lbllicensePlate.gridx = 6;
+		gbc_lbllicensePlate.gridy = 1;
+		frame.getContentPane().add(lbllicensePlate, gbc_lbllicensePlate);
 		
 		JLabel lblUnlockPomp = new JLabel("Unlock Pomp");
 		lblUnlockPomp.setForeground(Color.LIGHT_GRAY);
@@ -250,7 +225,7 @@ public class Gui {
 		frame.getContentPane().add(p1Amount, gbc_p1Amount);
 		p1Amount.setColumns(10);
 		
-		//Show 3 different oil types voor pomp1
+		//Show 3 different oil types for pomp1
 		p1ComboBox = new JComboBox<Object>();
 		p1ComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -348,12 +323,12 @@ public class Gui {
 		p1PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p1Amount.getText().length() > 0 && p1Liters.getText().length() > 0 && p1KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p1Amount.getText() + ". Pomp1 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p1PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p1PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}			
 			
      		}
@@ -525,12 +500,12 @@ public class Gui {
 		p2PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p2Amount.getText().length() > 0 && p2Liters.getText().length() > 0 && p2KenNum.getText().length() > 0) {
 					//textArea.setText("Customer Paid: SRD " + p2Amount.getText() + ". Pomp2 is ready to be used.");
 					textArea.append("\n Customer Paid: SRD " + p2Amount.getText() + ". Pomp2 is ready to be used.");
 				} else {
-					JOptionPane.showMessageDialog(p2PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p2PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -702,12 +677,12 @@ public class Gui {
 		p3PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p3Amount.getText().length() > 0 && p3Liters.getText().length() > 0 && p3KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p3Amount.getText() + ". Pomp 3 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p3PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p3PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -878,12 +853,12 @@ public class Gui {
 		p4PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p4Amount.getText().length() > 0 && p4Liters.getText().length() > 0 && p4KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p4Amount.getText() + ". Pomp 4 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p4PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p4PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -1053,12 +1028,12 @@ public class Gui {
 		p5PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p5Amount.getText().length() > 0 && p5Liters.getText().length() > 0 && p5KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p5Amount.getText() + ". Pomp 5 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p5PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p5PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -1107,7 +1082,7 @@ public class Gui {
 		p6Amount.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				//If you start typing in the pomp6 Amount field and no oiltype is selected an pop up error should show
+				//If you start typing in the pomp6 Amount field and no oil type is selected an pop up error should show
 				if (p6ComboBox.getSelectedIndex() == 0 || p6ComboBox.getSelectedItem() == null) {
 					JOptionPane.showMessageDialog(p6ComboBox, "Please select a oil type first for pomp 6", "Warning Message", JOptionPane.WARNING_MESSAGE);
 				}	else {
@@ -1228,12 +1203,12 @@ public class Gui {
 		p6PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p6Amount.getText().length() > 0 && p6Liters.getText().length() > 0 && p6KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p6Amount.getText() + ". Pomp 6 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p6PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p6PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -1282,7 +1257,7 @@ public class Gui {
 		p7Amount.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				//If you start typing in the pomp7Amount field and no oiltype is selected an pop up error should show
+				//If you start typing in the pomp7Amount field and no oil type is selected an pop up error should show
 				if (p7ComboBox.getSelectedIndex() == 0 || p7ComboBox.getSelectedItem() == null) {
 					JOptionPane.showMessageDialog(p7ComboBox, "Please select a oil type first for pomp 7", "Warning Message", JOptionPane.WARNING_MESSAGE);
 				}	else {
@@ -1403,12 +1378,12 @@ public class Gui {
 		p7PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p7Amount.getText().length() > 0 && p7Liters.getText().length() > 0 && p7KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p7Amount.getText() + ". Pomp 7 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p7PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p7PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -1457,7 +1432,7 @@ public class Gui {
 		p8Amount.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				//If you start typing in the pomp8Amount field and no oiltype is selected an pop up error should show
+				//If you start typing in the pomp8Amount field and no oil type is selected an pop up error should show
 				if (p8ComboBox.getSelectedIndex() == 0 || p8ComboBox.getSelectedItem() == null) {
 					JOptionPane.showMessageDialog(p8ComboBox, "Please select a oil type first for pomp 8", "Warning Message", JOptionPane.WARNING_MESSAGE);
 				}	else {
@@ -1578,12 +1553,12 @@ public class Gui {
 		p8PaidBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//if liter, amount field and kentekennummer is not filled in it will produce an error message 
+				//if liter, amount field and licensePlate is not filled in it will produce an error message 
 				if(p8Amount.getText().length() > 0 && p8Liters.getText().length() > 0 && p8KenNum.getText().length() > 0) {
 					textArea.setText("Customer Paid: SRD " + p8Amount.getText() + ". Pomp 8 is ready to be used.");
 					//pomp1Toggle.setEnabled(true);
 				} else {
-					JOptionPane.showMessageDialog(p8PaidBtn, "Amount, Liters or Kentekennummer is not filled in.");
+					JOptionPane.showMessageDialog(p8PaidBtn, "Amount, Liters or licensePlate is not filled in.");
 				}
 				
 			}
@@ -1601,15 +1576,17 @@ public class Gui {
 		table.setShowGrid(false);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Diesel", "6.06"},
-				{"Unleaded", "6.52"},
-				{"SuperUnleaded", "6.72"},
+				{"Diesel", Diesel},
+				{"Unleaded", Unleaded},
+				{"SuperUnleaded", SuperUnleaded},
 			},
 			new String[] {
 				"New column", "New column"
 			}
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(89);
+		
+		//Tab
 		
 		//Table name
 		JLabel label = new JLabel("Oil Prices");
@@ -1624,7 +1601,7 @@ public class Gui {
 		gbc_table.gridwidth = 2;
 		gbc_table.insets = new Insets(0, 0, 5, 5);
 		gbc_table.fill = GridBagConstraints.BOTH;
-		gbc_table.gridx = 3;
+		gbc_table.gridx = 2;
 		gbc_table.gridy = 12;
 		frame.getContentPane().add(table, gbc_table);
 		
@@ -1639,6 +1616,38 @@ public class Gui {
 		gbc_textArea.gridx = 5;
 		gbc_textArea.gridy = 12;
 		frame.getContentPane().add(textArea, gbc_textArea);
+		
+		menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		mntmShowOilPrice = new JMenuItem("Show Oil Price");
+		mnFile.add(mntmShowOilPrice);
+		
+		mntmChangeOilPrice = new JMenuItem("Change Oil Price");
+		//Open window to change oil price
+		mntmChangeOilPrice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispose();//closes login screen
+				Prices prices = new Prices(); //Create object of second window
+				prices.setVisible(true);
+				//prices.revalidate();
+				//prices.repaint();
+				
+			}
+		});
+		mnFile.add(mntmChangeOilPrice);
+		
+		mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(JFrame.EXIT_ON_CLOSE);
+			}
+		});
+		mnFile.add(mntmExit);
 	}
+
 
 }
